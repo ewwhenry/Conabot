@@ -39,7 +39,11 @@ client.on("message_create", async (m) => {
 
   if (!commandName) return;
 
-  let command = client.commands.get(commandName);
+  let command =
+    client.commands.get(commandName) ||
+    Array.from(client.commands.values()).find((x) =>
+      x.alias?.includes(commandName)
+    );
 
   if (!command) {
     await m.reply("Comando desconocido.");

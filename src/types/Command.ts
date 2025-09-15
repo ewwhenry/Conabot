@@ -5,5 +5,6 @@ export interface Command {
   name: string;
   description: string;
   usage: string;
+  alias?: string[];
   run: (client: Client, message: Message, args: string[]) => void;
 }

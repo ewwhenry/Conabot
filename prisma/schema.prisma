@@ -8,15 +8,35 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// The "User" model should be understood as a user who may or may not be a student. It would be any WhatsApp user.
+model Users {
+  id String @id @unique // Serialized WAID: <country_code>1<phone_number>@c.us
+
+  // In case the user is a student, they can provide their student registration ("matrícula") to identify themselves.
+  student_id String? @unique
+
+  // RELATIONS
+  student Students? @relation(fields: [student_id], references: [id], onDelete: NoAction)
+}
+
+model Homeworks {
+  id      String         @id @unique @default(nanoid())
+  title   String         @unique
+  content String         @default("")
+  status  HomeworkStatus @default(PENDING)
+  limit   DateTime?
+}
+
 model Students {
-  id              String            @id @unique
-  curp            String            @unique
-  group           String
-  first_name      String
-  last_names      String
-  full_name       String
-  email           String            @unique
-  StudentSemester StudentSemester[]
+  id               String            @id @unique
+  curp             String            @unique
+  group            String
+  first_name       String
+  last_names       String
+  full_name        String
+  email            String            @unique
+  student_semester StudentSemester[]
+  user             Users?
 }
 
 model StudentSemester {
@@ -37,4 +57,11 @@ model SubjectGrade {
   score        Int
   semester_id  Int
   semester     StudentSemester @relation(fields: [semester_id], references: [id], onDelete: Cascade)
+}
+
+enum HomeworkStatus {
+  PENDING
+  EXPIRED
+  PAUSED
+  DONE
 }

@@ -2,11 +2,12 @@ import { PREFIX } from "../config";
 import { Command } from "../types/Command";
 
 export default {
-  name: "hola",
+  name: "help",
+  alias: ["ayuda", "h"],
   description:
-    "Comando inicial, te digo de que va el bot, para que sirve y como empezar a usarlo.",
-  usage: `${PREFIX}hola`,
-  async run(client, message, args) {
+    "Comando de ayuda, da informacion general sobre como usar el bot.",
+  usage: `${PREFIX}help`,
+  async run(client, message, _args) {
     const commands: string = Array.from(client.commands.values())
       .map(
         (x) =>
@@ -15,7 +16,7 @@ export default {
       .join("\n\n");
 
     message.reply(
-      `*Hola!*\n\nGracias por usar el bot. Este bot está creado con el fin de hacer procesos frecuentes de forma más sencillas y rapidas.\nAquí hay algunos comandos:\n\n` +
+      `*Lista de comandos*\n\n` +
         commands +
         "\n\n⚠️⚠️⚠️\n*El bot solo responde a mensajes que empiecen con el prefijo, el cual es `" +
         PREFIX +

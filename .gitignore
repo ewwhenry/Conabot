@@ -6,3 +6,5 @@ node_modules
 .ww*
 *.xlsx
 dist
+
+/generated/prisma

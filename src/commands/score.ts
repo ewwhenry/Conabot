@@ -1,7 +1,7 @@
 import { Command } from "../types/Command";
 import getNotes from "../lib/getNotes";
 import { PREFIX } from "../config";
-import prisma from "../prisma";
+import { prisma } from "../prisma";
 import { Message } from "whatsapp-web.js";
 
 let matricula_regex = /^\d{9}-\d{1}$/;

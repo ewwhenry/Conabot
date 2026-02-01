@@ -5,7 +5,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 // The "User" model should be understood as a user who may or may not be a student. It would be any WhatsApp user.

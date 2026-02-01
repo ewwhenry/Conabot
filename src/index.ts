@@ -1,13 +1,22 @@
 import { LocalAuth } from "whatsapp-web.js";
 import * as qrcode from "qrcode-terminal";
-import { SERIALIZED_ID, PREFIX, COMMANDS_PATH } from "./config";
+import { PREFIX, COMMANDS_PATH } from "./config";
 import * as fs from "fs";
 import * as path from "path";
 import { Command } from "./types/Command";
 import { Client } from "./core/Client";
 
 const client = new Client({
-  authStrategy: new LocalAuth(),
+  authStrategy: new LocalAuth({
+    clientId: "main-session",
+  }),
+  puppeteer: {
+    headless: false,
+    args: ["--disable-dev-shm-usage"],
+    handleSIGINT: true,
+    handleSIGTERM: true,
+    handleSIGHUP: true,
+  },
 });
 
 async function registerCommands(commands_path: string) {
@@ -22,16 +31,16 @@ async function registerCommands(commands_path: string) {
   }
 }
 
-client.once("ready", () => {
+client.on("ready", () => {
   console.log("Client is ready!");
 });
 
 client.on("qr", (qr) => {
-  console.log("QR recibido:", qr);
   qrcode.generate(qr, { small: true }, (qrcode) => console.log(qrcode));
 });
 
 client.on("message_create", async (m) => {
+  await new Promise((r, e) => setTimeout(() => r(), 1500));
   if (!m.body.trim().startsWith(PREFIX)) return;
 
   let args = m.body.slice(PREFIX.length).split(/ +/g);

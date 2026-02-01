@@ -1,5 +1,5 @@
 import puppeteer from "puppeteer";
-import prisma from "../src/prisma";
+import { prisma } from "../src/prisma";
 import type { Output, Semester, Subject } from "../src/types/Structures";
 
 // Getting all students where SEMESTER === 5
@@ -20,11 +20,10 @@ export default async function getNotes(
   curp: string
 ): Promise<Output> {
   const student = await prisma.students.findFirst({ where: { id: matricula } });
-  console.log({
-    student,
-  });
+  console.log("Obteniendo notas de", student!.full_name);
   const browser = await puppeteer.launch({
     timeout: 60_000,
+    headless: true,
   });
   const page = await browser.newPage();
 
@@ -81,6 +80,8 @@ export default async function getNotes(
       semesters: res,
     } as Output;
   }, student);
+
+  console.log(tables.semesters.length);
 
   await browser.close();
   return tables;
